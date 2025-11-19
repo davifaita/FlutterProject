@@ -32,16 +32,18 @@ Este comando instala o pacote provider e registra os caminhos dos assets locais.
 
 Para garantir o carregamento correto dos assets, execute a limpeza e rode o app:
 
- Opcional, mas recomendado após mexer nos assets
-flutter clean 
+Opcional, mas recomendado após mexer nos assets
+ 
+  flutter clean 
 
- Executa o aplicativo
-flutter run
+Executa o aplicativo
+ 
+  flutter run
 
 
 O aplicativo será iniciado na Tela de Login.
 
-📱 Telas Implementadas
+Telas Implementadas
 
 A aplicação é composta por três grupos principais de telas:
 
