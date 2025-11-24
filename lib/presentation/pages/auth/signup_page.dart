@@ -1,7 +1,9 @@
+import 'package:ecommerce/shared/utils/form_validators.dart';
 import 'package:flutter/material.dart';
-import '../../../shared/utils/form_validators.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'login_page.dart';
 
-// Tela de Cadastro de Usuário
+
 class SignUpPage extends StatefulWidget {
   static const routeName = '/signup';
 
@@ -13,35 +15,41 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
 
-  void _submit() {
-    // 1. Validar os campos
+  final nomeController = TextEditingController();
+  final emailController = TextEditingController();
+  final senhaController = TextEditingController();
+  final confirmarSenhaController = TextEditingController();
+
+  Future<void> _register() async {
+    // 1️⃣ Valida o formulário antes de tudo
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
-    // 2. Validação adicional: senhas devem ser iguais
-    if (_passwordController.text != _confirmPasswordController.text) {
-      // Exibe um SnackBar para mostrar a mensagem de erro
+    // 2️⃣ Senhas diferentes (também validado no validator)
+    if (senhaController.text != confirmarSenhaController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Erro: As senhas não coincidem!'),
+          content: Text("As senhas não coincidem!"),
           backgroundColor: Colors.red,
         ),
       );
       return;
     }
 
-    // 3. Simula o cadastro bem-sucedido
-    // Redirecionar de volta ao login com mensagem visual
-    Navigator.of(context).pop();
+    // 3️⃣ Salva os dados
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_name', nomeController.text);
+    await prefs.setString('user_email', emailController.text);
+    await prefs.setString('user_password', senhaController.text);
+
+    // 4️⃣ Fecha página
+    Navigator.pop(context);
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Cadastro realizado com sucesso! Faça login para continuar.'),
+        content: Text("Cadastro realizado, faça login!"),
         backgroundColor: Colors.green,
       ),
     );
@@ -51,92 +59,74 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Criar Conta'),
+        title: const Text("Criar Conta"),
         backgroundColor: Colors.blueAccent,
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(30.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                const Text(
-                  'Bem-vindo à Flutter Store',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blueAccent),
-                  textAlign: TextAlign.center,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(30),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              const Text(
+                "Cadastro",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 30),
+              ),
+              const SizedBox(height: 20),
 
-                // Campo Nome
-                TextFormField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Nome',
-                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-                    prefixIcon: Icon(Icons.person),
-                  ),
-                  validator: (value) => FormValidators.requiredField(value, 'Nome'),
-                ),
-                const SizedBox(height: 15),
+              TextFormField(
+                controller: nomeController,
+                decoration: const InputDecoration(labelText: "Nome"),
+                validator: (v) => FormValidators.requiredField(v, "Nome"),
+              ),
+              const SizedBox(height: 10),
 
-                // Campo E-mail
-                TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'E-mail',
-                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-                    prefixIcon: Icon(Icons.email),
-                  ),
-                  validator: FormValidators.validateEmail,
-                ),
-                const SizedBox(height: 15),
+              TextFormField(
+                controller: emailController,
+                decoration: const InputDecoration(labelText: "E-mail"),
+                validator: FormValidators.validateEmail,
+              ),
+              const SizedBox(height: 10),
 
-                // Campo Senha
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Senha',
-                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-                    prefixIcon: Icon(Icons.lock),
-                  ),
-                  validator: (value) => FormValidators.requiredField(value, 'Senha'),
-                ),
-                const SizedBox(height: 15),
+              TextFormField(
+                controller: senhaController,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: "Senha"),
+                validator: FormValidators.validatePassword,
+              ),
+              const SizedBox(height: 10),
 
-                // Campo Confirmar Senha
-                TextFormField(
-                  controller: _confirmPasswordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Confirmar Senha',
-                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-                    prefixIcon: Icon(Icons.lock_reset),
-                  ),
-                  validator: (value) => FormValidators.requiredField(value, 'Confirmação de Senha'),
+              TextFormField(
+                controller: confirmarSenhaController,
+                obscureText: true,
+                decoration:
+                    const InputDecoration(labelText: "Confirmar Senha"),
+                validator: (v) => FormValidators.confirmPassword(
+                  v,
+                  senhaController.text,
                 ),
-                const SizedBox(height: 30),
+              ),
 
-                // Botão de Cadastro
-                ElevatedButton(
-                  onPressed: _submit,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Text(
-                    'Cadastrar',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
+              const SizedBox(height: 20),
+
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _register,
+                  child: const Text("Cadastrar"),
                 ),
-              ],
-            ),
+              ),
+
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, LoginPage.routeName);
+                },
+                child: const Text("Já tenho conta"),
+              )
+            ],
           ),
         ),
       ),
