@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login_page.dart';
 
-
 class SignUpPage extends StatefulWidget {
   static const routeName = '/signup';
 
@@ -21,35 +20,43 @@ class _SignUpPageState extends State<SignUpPage> {
   final senhaController = TextEditingController();
   final confirmarSenhaController = TextEditingController();
 
-  Future<void> _register() async {
-    // 1️⃣ Valida o formulário antes de tudo
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+  bool isLoading = false;
 
-    // 2️⃣ Senhas diferentes (também validado no validator)
-    if (senhaController.text != confirmarSenhaController.text) {
+  Future<void> _register() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedEmail = prefs.getString('user_email');
+
+    // ✔ Validação de e-mail único
+    final uniqueEmailError =
+        FormValidators.uniqueEmail(emailController.text, savedEmail);
+
+    if (uniqueEmailError != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("As senhas não coincidem!"),
+        SnackBar(
+          content: Text(uniqueEmailError),
           backgroundColor: Colors.red,
         ),
       );
       return;
     }
 
-    // 3️⃣ Salva os dados
-    final prefs = await SharedPreferences.getInstance();
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => isLoading = true);
+
     await prefs.setString('user_name', nomeController.text);
     await prefs.setString('user_email', emailController.text);
     await prefs.setString('user_password', senhaController.text);
 
-    // 4️⃣ Fecha página
+    await Future.delayed(const Duration(seconds: 1));
+
+    setState(() => isLoading = false);
+
     Navigator.pop(context);
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text("Cadastro realizado, faça login!"),
+        content: Text("Cadastro realizado! Faça login."),
         backgroundColor: Colors.green,
       ),
     );
@@ -75,6 +82,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+
               const SizedBox(height: 20),
 
               TextFormField(
@@ -82,13 +90,33 @@ class _SignUpPageState extends State<SignUpPage> {
                 decoration: const InputDecoration(labelText: "Nome"),
                 validator: (v) => FormValidators.requiredField(v, "Nome"),
               ),
+
               const SizedBox(height: 10),
 
-              TextFormField(
-                controller: emailController,
-                decoration: const InputDecoration(labelText: "E-mail"),
-                validator: FormValidators.validateEmail,
+              // 🔥 Campo de E-MAIL atualizado com regra extra de e-mail único
+              FutureBuilder(
+                future: SharedPreferences.getInstance(),
+                builder: (context, snapshot) {
+                  String? savedEmail;
+
+                  if (snapshot.connectionState == ConnectionState.done &&
+                      snapshot.data != null) {
+                    savedEmail = snapshot.data!.getString('user_email');
+                  }
+
+                  return TextFormField(
+                    controller: emailController,
+                    decoration: const InputDecoration(labelText: "E-mail"),
+                    validator: (v) {
+                      final emailError = FormValidators.validateEmail(v);
+                      if (emailError != null) return emailError;
+
+                      return FormValidators.uniqueEmail(v, savedEmail);
+                    },
+                  );
+                },
               ),
+
               const SizedBox(height: 10),
 
               TextFormField(
@@ -97,26 +125,38 @@ class _SignUpPageState extends State<SignUpPage> {
                 decoration: const InputDecoration(labelText: "Senha"),
                 validator: FormValidators.validatePassword,
               ),
+
               const SizedBox(height: 10),
 
               TextFormField(
                 controller: confirmarSenhaController,
                 obscureText: true,
-                decoration:
-                    const InputDecoration(labelText: "Confirmar Senha"),
-                validator: (v) => FormValidators.confirmPassword(
-                  v,
-                  senhaController.text,
-                ),
+                decoration: const InputDecoration(labelText: "Confirmar Senha"),
+                validator: (v) =>
+                    FormValidators.confirmPassword(v, senhaController.text),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 25),
 
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _register,
-                  child: const Text("Cadastrar"),
+                  onPressed: isLoading ? null : _register,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(double.infinity, 50),
+                  ),
+                  child: isLoading
+                      ? const SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text("Cadastrar"),
                 ),
               ),
 
@@ -125,7 +165,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Navigator.pushReplacementNamed(context, LoginPage.routeName);
                 },
                 child: const Text("Já tenho conta"),
-              )
+              ),
             ],
           ),
         ),

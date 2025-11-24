@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
     const AboutTab(),
   ];
 
-  int _selectedTabIndex = 0; // Índice da aba atualmente selecionada (default: Produtos)
+  int _selectedTabIndex = 0;
 
   void _selectTab(int index) {
     setState(() {

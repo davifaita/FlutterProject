@@ -64,12 +64,15 @@ class AboutTab extends StatelessWidget {
           Center(
             child: Column(
               children: [
-                const Text('Versão 1.0.0 - 2024', style: TextStyle(color: Colors.grey, fontSize: 14)),
+                const Text('Versão 1.0.0 - 2024',
+                    style: TextStyle(color: Colors.grey, fontSize: 14)),
                 const SizedBox(height: 5),
                 TextButton.icon(
                   onPressed: () {},
-                  icon: const Icon(Icons.info_outline, color: Colors.blueAccent),
-                  label: const Text('Visite o nosso código-fonte (simulado)', style: TextStyle(color: Colors.blueAccent)),
+                  icon:
+                      const Icon(Icons.info_outline, color: Colors.blueAccent),
+                  label: const Text('Visite o nosso código-fonte (simulado)',
+                      style: TextStyle(color: Colors.blueAccent)),
                 ),
               ],
             ),

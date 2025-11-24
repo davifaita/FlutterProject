@@ -23,28 +23,43 @@ class FlutterStoreApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => FavoritesProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
-      child: Consumer<AuthProvider>(
-        builder: (context, auth, child) {
-          return MaterialApp(
-            title: 'Flutter Store App',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-              fontFamily: 'Inter',
-              useMaterial3: false,
-            ),
-
-            routes: {
-              LoginPage.routeName: (_) => LoginPage(),
-              SignUpPage.routeName: (_) => SignUpPage(),
-              HomePage.routeName: (_) => const HomePage(),
-              ProductDetailPage.routeName: (_) => const ProductDetailPage(),
-            },
-
-            initialRoute:
-                auth.isLoggedIn ? HomePage.routeName : LoginPage.routeName,
-          );
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: const SplashScreen(),
+        routes: {
+          LoginPage.routeName: (_) => const LoginPage(),
+          SignUpPage.routeName: (_) => const SignUpPage(),
+          HomePage.routeName: (_) => const HomePage(),
+          ProductDetailPage.routeName: (_) => const ProductDetailPage(),
         },
+      ),
+    );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.pushReplacementNamed(context, LoginPage.routeName);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      backgroundColor: Colors.blueAccent,
+      body: Center(
+        child: CircularProgressIndicator(color: Colors.blue),
       ),
     );
   }

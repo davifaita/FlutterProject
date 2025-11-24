@@ -16,11 +16,12 @@ class ProductCard extends StatelessWidget {
     return Consumer<FavoritesProvider>(
       builder: (context, favoritesProvider, child) {
         final isFav = favoritesProvider.isFavorite(product);
-        
+
         return Card(
           elevation: 4,
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: ListTile(
             // Abre a tela de detalhes ao clicar no card
             onTap: () {
@@ -29,7 +30,7 @@ class ProductCard extends StatelessWidget {
                 arguments: product,
               );
             },
-            
+
             // Imagem do produto
             leading: ClipRRect(
               borderRadius: BorderRadius.circular(8),
@@ -38,11 +39,11 @@ class ProductCard extends StatelessWidget {
                 width: 60,
                 height: 60,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => 
-                  const Icon(Icons.error, color: Colors.red),
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.error, color: Colors.red),
               ),
             ),
-            
+
             // Nome e Preço
             title: Text(
               product.name,
@@ -52,7 +53,7 @@ class ProductCard extends StatelessWidget {
               'R\$ ${product.price.toStringAsFixed(2)}',
               style: const TextStyle(color: Colors.green, fontSize: 16),
             ),
-            
+
             // Botão/Ícone de Favoritar
             trailing: IconButton(
               icon: Icon(

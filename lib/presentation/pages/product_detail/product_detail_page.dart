@@ -34,18 +34,19 @@ class ProductDetailPage extends StatelessWidget {
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 2,
                     blurRadius: 7,
-                    offset: const Offset(0, 3), 
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
               child: Image.asset(
                 product.imageUrl,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => 
-                  const Center(child: Icon(Icons.image_not_supported, size: 50, color: Colors.grey)),
+                errorBuilder: (context, error, stackTrace) => const Center(
+                    child: Icon(Icons.image_not_supported,
+                        size: 50, color: Colors.grey)),
               ),
             ),
-            
+
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -103,7 +104,9 @@ class ProductDetailPage extends StatelessWidget {
                           color: Colors.white,
                         ),
                         label: Text(
-                          isFav ? 'REMOVER DOS FAVORITOS' : 'ADICIONAR AOS FAVORITOS',
+                          isFav
+                              ? 'REMOVER DOS FAVORITOS'
+                              : 'ADICIONAR AOS FAVORITOS',
                           style: const TextStyle(color: Colors.white),
                         ),
                         onPressed: () {
@@ -112,14 +115,17 @@ class ProductDetailPage extends StatelessWidget {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                isFav ? 'Produto removido dos favoritos!' : 'Produto adicionado aos favoritos!',
+                                isFav
+                                    ? 'Produto removido dos favoritos!'
+                                    : 'Produto adicionado aos favoritos!',
                               ),
                               duration: const Duration(seconds: 1),
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: isFav ? Colors.red : Colors.blueAccent,
+                          backgroundColor:
+                              isFav ? Colors.red : Colors.blueAccent,
                           minimumSize: const Size(double.infinity, 50),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
