@@ -44,9 +44,11 @@ O aplicativo será iniciado na Tela de Login.
 
 #Autenticação
 
-  Login Page: Ponto de entrada do aplicativo. Possui validação simples de campos e redireciona para a Home.
+  Login Page: Tela de entrada do aplicativo. Realiza validação completa dos campos, verificando se o e-mail e a senha foram preenchidos corretamente e se correspondem aos dados cadastrados no sistema.
+  Inclui feedback visual de carregamento e só permite o acesso à Home quando o login é válido.
 
-  Sign Up Page (Cadastro): Permite a criação simulada de conta, incluindo validação para garantir que as senhas digitadas sejam iguais.
+  Sign Up Page (Cadastro): Tela destinada à criação de uma nova conta. Possui validações de nome, e-mail e senha, incluindo regras obrigatórias, formato correto de e-mail, confirmação de senha e verificação de e-mail único, 
+  impedindo que um usuário seja cadastrado duas vezes com o mesmo endereço. Apresenta animação de carregamento durante o processo e, após o cadastro bem-sucedido, redireciona o usuário de volta ao login.
 
 #Tela Principal (Home)
 
