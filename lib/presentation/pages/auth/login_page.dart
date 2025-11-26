@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../shared/utils/form_validators.dart';
-import '../home/home_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'signup_page.dart';
 
-// Tela de Login
 class LoginPage extends StatefulWidget {
-  static const routeName = '/'; // Rota inicial
+  static const routeName = '/login';
 
   const LoginPage({super.key});
 
@@ -14,101 +12,120 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final emailController = TextEditingController();
+  final senhaController = TextEditingController();
 
-  void _submit() {
-    // Validação visual: mostrar mensagem se campos estiverem vazios
-    if (!_formKey.currentState!.validate()) {
-      return;
+  bool isLoading = false;
+  bool showPassword = false;
+
+  Future<void> _login() async {
+    setState(() => isLoading = true);
+
+    final prefs = await SharedPreferences.getInstance();
+    await Future.delayed(const Duration(seconds: 2));
+
+    final savedEmail = prefs.getString('user_email');
+    final savedPassword = prefs.getString('user_password');
+
+    if (savedEmail == emailController.text &&
+        savedPassword == senhaController.text) {
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("E-mail ou senha incorretos!"),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
 
-    // Simula o login bem-sucedido
-    // A validação de e-mail/senha é simples para fins de requisito.
-    Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+    setState(() => isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter Store - Login'),
-        backgroundColor: Colors.blueAccent,
+        title: const Text("Flutter Store - Login"),
+        backgroundColor: const Color(0xFF448AFF),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(30.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                const Text(
-                  'Bem-vindo(a)!',
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.blueAccent),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 30),
-
-                // Campo E-mail
-                TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'E-mail',
-                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-                    prefixIcon: Icon(Icons.email),
-                  ),
-                  // Validação simples (apenas se não está vazio)
-                  validator: (value) => FormValidators.requiredField(value, 'E-mail'),
-                ),
-                const SizedBox(height: 15),
-
-                // Campo Senha
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Senha',
-                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-                    prefixIcon: Icon(Icons.lock),
-                  ),
-                  // Validação simples (apenas se não está vazio)
-                  validator: (value) => FormValidators.requiredField(value, 'Senha'),
-                ),
-                const SizedBox(height: 30),
-
-                // Botão "Entrar" redireciona à Tela Home
-                ElevatedButton(
-                  onPressed: _submit,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Text(
-                    'Entrar',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                // Link para "Criar Conta"
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(SignUpPage.routeName);
-                  },
-                  child: const Text(
-                    'Criar Conta',
-                    style: TextStyle(color: Colors.blueAccent, fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              "Bem-vindo(a)!",
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
             ),
-          ),
+
+            const SizedBox(height: 30),
+
+            // CAMPO EMAIL
+            TextField(
+              controller: emailController,
+              decoration: const InputDecoration(
+                labelText: "E-mail",
+                prefixIcon: Icon(Icons.mail),
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            // CAMPO SENHA COM ÍCONE DE OLHO
+            TextField(
+              controller: senhaController,
+              obscureText: !showPassword,
+              decoration: InputDecoration(
+                labelText: "Senha",
+                prefixIcon: const Icon(Icons.lock),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    showPassword ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() => showPassword = !showPassword);
+                  },
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 25),
+
+            // BOTÃO ENTRAR
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: isLoading ? null : _login,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 50),
+                ),
+                child: isLoading
+                    ? const SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Text("Entrar"),
+              ),
+            ),
+
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, SignUpPage.routeName);
+              },
+              child: const Text("Criar Conta"),
+            ),
+          ],
         ),
       ),
     );

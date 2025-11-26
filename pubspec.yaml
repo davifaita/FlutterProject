@@ -1,19 +1,19 @@
 name: ecommerce
 description: Aplicação de exemplo para Sistemas Móveis - Flutter Store.
 
-publish_to: 'none' # Evita a publicação acidental.
+publish_to: 'none'
 
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.0 <4.0.0' # Use uma versão de SDK Flutter compatível com seu ambiente
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  
-  # DEPENDÊNCIA CORRIGIDA: Adiciona o pacote provider
-  provider: ^6.1.1 
+
+  provider: ^6.1.1
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
@@ -22,6 +22,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  # Aqui você definiria assets, como imagens e fontes, se necessário.
+
   assets:
     - assets/images/

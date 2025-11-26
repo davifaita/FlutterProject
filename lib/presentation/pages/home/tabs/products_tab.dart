@@ -30,13 +30,14 @@ class _ProductsTabState extends State<ProductsTab> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(child: Text('Erro ao carregar produtos: ${snapshot.error}'));
+          return Center(
+              child: Text('Erro ao carregar produtos: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Center(child: Text('Nenhum produto encontrado.'));
         }
 
         final products = snapshot.data!;
-        
+
         // ListView.builder para construir a lista de cards de produtos
         return ListView.builder(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
