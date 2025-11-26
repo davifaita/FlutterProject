@@ -1,106 +1,67 @@
-#Flutter Store App
+Flutter Store App
 
-<<<<<<< HEAD
+Este projeto é uma aplicação Flutter simples que simula um e-commerce, desenvolvido para fins acadêmicos na disciplina de Sistemas Móveis. Ele demonstra o uso de widgets essenciais, navegação com Navigator e gerenciamento de estado local com Provider.
 
-Este projeto é uma aplicação Flutter simples que simula um e-commerce, desenvolvido para fins acadêmicos na disciplina de Sistemas Móveis.
+======================================================================
 
-Como Executar o Projeto:
-=======
-   Este projeto é uma aplicação Flutter simples que simula um e-commerce, desenvolvido para fins acadêmicos na disciplina de Sistemas Móveis.
+Como Executar o Projeto
 
-#Como Executar o Projeto:
->>>>>>> 2c1c6c587b5837e68b2e4f36b9dd4da63029dce5
+Para rodar este projeto em seu ambiente de desenvolvimento, siga os passos abaixo:
 
-   Para rodar este projeto em seu ambiente de desenvolvimento, siga os passos abaixo:
+1. Configuração de Assets (Imagens Locais)
 
-#Configuração de Assets (Imagens Locais)
+O projeto depende de imagens locais (assets). O carregamento só funcionará se a estrutura de pastas e a configuração estiverem corretas.
 
-<<<<<<< HEAD
-  O projeto usa imagens que devem estar salvas localmente.
+Crie a seguinte estrutura de pastas na raiz do seu projeto:
 
-  Crie a seguinte estrutura de pastas na raiz do seu projeto:
+-flutter_store_app/assets/images/
 
-    flutter_store_app/assets/images/
-=======
-   O projeto usa imagens que devem estar salvas localmente.
+Adicione os arquivos de imagem (ex: smartwatch.png, fone.png, teclado.png, etc.) na pasta 'assets/images/'.
 
-   Crie a seguinte estrutura de pastas na raiz do seu projeto:
+2. Instalação e Configuração
 
-   flutter_store_app/assets/images/
->>>>>>> 2c1c6c587b5837e68b2e4f36b9dd4da63029dce5
+Abra o terminal na pasta raiz do projeto (onde está o pubspec.yaml) e execute:
 
-   Adicione os arquivos de imagem (ex: smartwatch.png, fone.png, teclado.png, etc.) na pasta assets/images/.
+flutter pub get
 
-<<<<<<< HEAD
-  Adicione os arquivos de imagem (ex: smartwatch.png, fone.png, teclado.png, etc.) na pasta assets/images/.
-=======
-#Instalação das Dependências
->>>>>>> 2c1c6c587b5837e68b2e4f36b9dd4da63029dce5
+Este comando instala o pacote 'provider' e registra os caminhos dos assets locais definidos no 'pubspec.yaml'.
 
- Abra o terminal na pasta raiz do projeto (onde está o pubspec.yaml) e execute:
+3. Iniciar a Aplicação
 
-   flutter pub get
+Para garantir o carregamento correto dos assets (principalmente após adicionar novas imagens), é recomendável limpar o cache e rodar o app:
 
- Este comando instala o pacote provider e registra os caminhos dos assets locais.
+ Opcional, mas recomendado após mexer nos assets
+flutter clean
 
-#Iniciar a Aplicação
-
-  Para garantir o carregamento correto dos assets, execute a limpeza e rode o app:
-
-  Opcional, mas recomendado após mexer nos assets:
-
-   flutter clean
-
-<<<<<<< HEAD
-Opcional, mas recomendado após mexer nos assets
-flutter clean 
-
-Executa o aplicativo
+ Executa o aplicativo
 flutter run
-=======
-  Executa o aplicativo:
->>>>>>> 2c1c6c587b5837e68b2e4f36b9dd4da63029dce5
-
-   flutter run
 
 O aplicativo será iniciado na Tela de Login.
 
-<<<<<<< HEAD
- Telas Implementadas
-=======
-#Telas Implementadas:
->>>>>>> 2c1c6c587b5837e68b2e4f36b9dd4da63029dce5
+======================================================================
 
-   A aplicação é composta por três grupos principais de telas:
+Telas Implementadas
 
-#Autenticação
+A aplicação é organizada em três grupos principais de telas:
 
-<<<<<<< HEAD
-  Login Page: Ponto de entrada do aplicativo. Possui validação simples de campos e redireciona para a Home.
+A. Autenticação
 
-  Sign Up Page (Cadastro): Permite a criação simulada de conta, incluindo validação para garantir que as senhas digitadas sejam iguais.
-=======
-  Login Page: Tela de entrada do aplicativo. Realiza validação completa dos campos, verificando se o e-mail e a senha foram preenchidos corretamente e se correspondem aos dados cadastrados no sistema.
-  Inclui feedback visual de carregamento e só permite o acesso à Home quando o login é válido.
+-Login Page: Ponto de entrada. Possui validação simples e redireciona para a Home.
 
-  Sign Up Page (Cadastro): Tela destinada à criação de uma nova conta. Possui validações de nome, e-mail e senha, incluindo regras obrigatórias, formato correto de e-mail, confirmação de senha e verificação de e-mail único, 
-  impedindo que um usuário seja cadastrado duas vezes com o mesmo endereço. Apresenta animação de carregamento durante o processo e, após o cadastro bem-sucedido, redireciona o usuário de volta ao login.
->>>>>>> 2c1c6c587b5837e68b2e4f36b9dd4da63029dce5
+-Sign Up Page (Cadastro): Permite a criação simulada de conta, incluindo validação para garantir que as senhas digitadas sejam iguais.
 
-#Tela Principal (Home)
+B. Tela Principal (Home)
 
-  A Home é a tela que o usuário acessa após o login. Ela contém um Drawer (Menu Lateral) e um Bottom Navigation Bar (Navegação Inferior) para acessar:
+-A Home é a tela acessada após o login. Ela utiliza um Drawer (Menu Lateral) e um Bottom Navigation Bar (Navegação Inferior) para navegação entre as abas:
 
-  Produtos (Default): Exibe a lista completa de produtos mockados.
+-Produtos (Padrão): Exibe a lista completa de produtos mockados.
 
-  Meus Produtos (Favoritos): Exibe a lista de produtos marcados como favoritos (gerenciada localmente via Provider).
+-Meus Produtos (Favoritos): Exibe a lista de itens marcados como favoritos (gerenciada localmente via Provider).
 
-  Sobre: Exibe informações estáticas sobre o aplicativo.
+-Sobre: Exibe informações estáticas sobre o aplicativo e a equipe.
 
-#Detalhes do Produto
+C. Detalhes do Produto
 
-<<<<<<< HEAD
-  Product Detail Page: Abre ao clicar em qualquer produto da lista. Exibe a imagem local, nome, preço e descrição, além de permitir favoritar/desfavoritar o item.
-=======
-  Product Detail Page: Abre ao clicar em qualquer produto da lista. Exibe a imagem local, nome, preço e descrição, além de permitir favoritar/desfavoritar o item.
->>>>>>> 2c1c6c587b5837e68b2e4f36b9dd4da63029dce5
+-Product Detail Page: Abre ao clicar em qualquer produto da lista.
+
+-Funcionalidades: Exibe a imagem local (usando Image.asset), nome, preço e descrição, além de permitir favoritar/desfavoritar o item, atualizando o estado global.
